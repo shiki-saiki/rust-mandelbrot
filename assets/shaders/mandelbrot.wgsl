@@ -67,12 +67,5 @@ fn fragment(mesh: VertexOutput) -> @location(0) vec4<f32> {
 		}
     }
     var c = vec4<f32>(complex_to_rgb(cinv(q)), 1.0);
-
-	if fract(p_world.x - units_per_pixel) < units_per_pixel * 2.0 {
-		c.g = 1.0;
-	}
-	if fract(p_world.y - units_per_pixel) < units_per_pixel * 2.0 {
-		c.g = 1.0;
-	}
     return c;
 }
