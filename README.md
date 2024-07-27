@@ -24,7 +24,7 @@ cargo run
 - S: ズームアウト
 - A: 計算回数減少
 - D: 計算回数増加
-- 矢印キー: 移動
+- 矢印キー、ドラッグ: 移動
 
 ![zoom_in.gif](/zoom_in.gif)
 ![iteration.gif](/iteration.gif)

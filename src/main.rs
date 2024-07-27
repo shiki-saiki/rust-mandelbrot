@@ -1,8 +1,8 @@
 use bevy::{
     prelude::*,
-    reflect::TypePath,
     render::render_resource::{AsBindGroup, ShaderRef},
-    sprite::{Material2d, Material2dPlugin, MaterialMesh2dBundle}, window::{PrimaryWindow, WindowResized},
+    sprite::{Material2d, Material2dPlugin, MaterialMesh2dBundle},
+    window::{PrimaryWindow, WindowResized},
 };
 
 #[derive(Asset, TypePath, AsBindGroup, Debug, Clone)]
@@ -34,7 +34,7 @@ fn main() {
             Material2dPlugin::<MandelbrotMaterial>::default(),
         ))
         .add_systems(Startup, setup)
-        .add_systems(Update, (input_system, on_window_resized))
+        .add_systems(Update, (input_system, on_window_resized, on_mouse_drag))
         .run();
 }
 
@@ -118,4 +118,23 @@ fn on_window_resized(
         }
         rect.scale = Vec3::new(ev.width, ev.height, 1.0);
     }
+}
+
+fn on_mouse_drag(
+    mut cursor_moved_events: EventReader<CursorMoved>,
+    mut materials: ResMut<Assets<MandelbrotMaterial>>,
+    mouse_button: Res<ButtonInput<MouseButton>>,
+) {
+    if mouse_is_dragging(&mouse_button) {
+        for event in cursor_moved_events.read() {
+            let Some(delta) = event.delta else { continue };
+            for (_, material) in materials.iter_mut() {
+                material.position += -Vec2::new(delta.x, -delta.y) * material.units_per_pixel;
+            }
+        }
+    }
+}
+
+fn mouse_is_dragging(mouse_button: &ButtonInput<MouseButton>) -> bool {
+    mouse_button.pressed(MouseButton::Left) && !mouse_button.just_pressed(MouseButton::Left)
 }
